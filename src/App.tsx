@@ -11,9 +11,12 @@ import InputCheckbox from "./components/input-checkbox";
 
 import { useForm } from "react-hook-form";
 import InputSingleFile from "./components/input-single-file";
+import ImageFilePreview from "./components/image-file-preview";
 
 export default function App() {
   const form = useForm();
+  const file = form.watch("file");
+  const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
 
   return (
     <div className="grid gap-7 p-6">
@@ -71,6 +74,7 @@ export default function App() {
           {...form.register("file")}
           allowedExtensions={["png", "jpg", "jpeg", "webp"]}
           maxFileSizeMB={50}
+          replaceBy={<ImageFilePreview src={fileSource} alt="" />}
         />
       </div>
     </div>
