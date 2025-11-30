@@ -1,16 +1,18 @@
 import { tv, type VariantProps } from "tailwind-variants";
-import { useMemo, type ComponentProps, type ReactNode } from "react";
 import Icon from "./icon";
 import Text, { textVariants } from "./text";
 import UploadFileIcon from "../assets/icons/upload-file.svg?react";
 import FileImageIcon from "../assets/icons/image.svg?react";
 import { useWatch } from "react-hook-form";
+import React, { useMemo, type ReactNode } from "react";
 
 export const inputSingleFileVariants = tv({
-  base: `flex flex-col items-center justify-center w-full
-  border border-solid border-border-primary
+  base: `
+    flex flex-col items-center justify-center w-full
+    border border-solid border-border-primary
   group-hover:border-border-active
-  rounded-lg gap-1 transition`,
+    rounded-lg gap-1 transition
+  `,
   variants: {
     size: {
       md: "px-5 py-6",
@@ -35,21 +37,20 @@ export const inputSingleFileIconVariants = tv({
 
 interface InputSingleFileProps
   extends VariantProps<typeof inputSingleFileVariants>,
-    Omit<ComponentProps<"input">, "size"> {
+    Omit<React.ComponentProps<"input">, "size"> {
   error?: ReactNode;
   form: any;
-  replaceBy: ReactNode;
   allowedExtensions: string[];
-  maxFileSizeMB: number;
+  maxFileSizeInMB: number;
+  replaceBy: ReactNode;
 }
 
-//input do tipo substituição p/imagens ou arquivos
 export default function InputSingleFile({
   size,
   error,
   form,
   allowedExtensions,
-  maxFileSizeMB,
+  maxFileSizeInMB,
   replaceBy,
   ...props
 }: InputSingleFileProps) {
@@ -73,9 +74,8 @@ export default function InputSingleFile({
   }
 
   function isValidSize() {
-    const size = fileSize <= maxFileSizeMB * 1024 * 1024; //converte para byte
-    console.log(size);
-    return size;
+    //converte para byte
+    return fileSize <= maxFileSizeInMB * 1024 * 1024;
   }
 
   function isValidFile() {
@@ -102,19 +102,20 @@ export default function InputSingleFile({
                 className="text-placeholder text-center"
               >
                 Arraste o arquivo aqui
-                <br /> ou clique para selecionar
+                <br />
+                ou clique para selecionar
               </Text>
             </div>
           </div>
           <div className="flex flex-col gap-1 mt-1">
             {formFile && !isValidExtension() && (
               <Text variant="label-small" className="text-accent-red">
-                Tipo de arquivo inválido.
+                Tipo de arquivo inválido
               </Text>
             )}
             {formFile && !isValidSize() && (
               <Text variant="label-small" className="text-accent-red">
-                O tamanho do arquivo ultrapassa o máximo permitido.
+                Tamanho do arquivo ultrapassa o máximo
               </Text>
             )}
             {error && (
@@ -126,9 +127,8 @@ export default function InputSingleFile({
         </>
       ) : (
         <>
-          <div>{replaceBy}</div>
-
-          <div className="flex gap-3 items-center border border-solid border-border-primary rounded-lg mt-5 p-3">
+          {replaceBy}
+          <div className="flex gap-3 items-center border border-solid border-border-primary mt-5 p-3 rounded">
             <Icon svg={FileImageIcon} className="fill-white w-6 h-6" />
             <div className="flex flex-col">
               <div className="truncate max-w-80">
@@ -143,7 +143,9 @@ export default function InputSingleFile({
                     variant: "label-small",
                     className: "text-accent-red cursor-pointer hover:underline",
                   })}
-                  onClick={() => form.setValue(name, undefined)}
+                  onClick={() => {
+                    form.setValue(name, undefined);
+                  }}
                 >
                   Remover
                 </button>
