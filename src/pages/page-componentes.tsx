@@ -84,7 +84,7 @@ export default function PageComponents() {
           form={form}
           {...form.register("file")}
           allowedExtensions={["png", "jpg", "jpeg", "webp"]}
-          maxFileSizeMB={50}
+          maxFileSizeInMB={50}
           replaceBy={<ImagePreview src={fileSource} alt="" />}
         />
       </div>
@@ -104,7 +104,7 @@ export default function PageComponents() {
                 form={form}
                 {...form.register("file")}
                 allowedExtensions={["png", "jpg", "jpeg", "webp"]}
-                maxFileSizeMB={50}
+                maxFileSizeInMB={50}
                 replaceBy={<ImagePreview src={fileSource} alt="" />}
               />
             </DialogBody>
