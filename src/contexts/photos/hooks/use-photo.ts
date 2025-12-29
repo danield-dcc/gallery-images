@@ -4,7 +4,7 @@ import type { Photo } from "../models/photo"
 
 interface PhotoDetailResponse extends Photo {
   nextPhotoId?: string
-  previousPhotoId?: String
+  previousPhotoId?: string
 }
 
 export default function usePhoto(id?: string) {
