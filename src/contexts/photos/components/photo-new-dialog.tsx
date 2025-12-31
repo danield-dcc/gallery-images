@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   Dialog,
   DialogBody,
@@ -25,6 +25,7 @@ interface PhotoNewDialogProps {
 }
 
 export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
+  const [modalOpen, setModalOpen] = useState(false);
   const form = useForm<PhotoNewFormSchema>({
     resolver: zodResolver(photoNewFromSchema),
   });
@@ -37,8 +38,14 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
     console.log(payload);
   }
 
+  useEffect(() => {
+    if (!modalOpen) {
+      form.reset();
+    }
+  }, [modalOpen, form]);
+
   return (
-    <Dialog>
+    <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
