@@ -34,6 +34,22 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
   const file = form.watch("file");
   const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined;
 
+  const albumsIds = form.watch("albumsIds");
+
+  function handleToggleAlbum(albumId: string) {
+    const albumsIds = form.getValues("albumsIds") || [];
+    const albumsSet = new Set(albumsIds); // O Set não permite a repetição de valores
+
+    if (albumsSet.has(albumId)) {
+      albumsSet.delete(albumId);
+    } else {
+      albumsSet.add(albumId);
+    }
+
+    //transformando o Set em uma array
+    form.setValue("albumsIds", Array.from(albumsSet));
+  }
+
   function handleSubmit(payload: PhotoNewFormSchema) {
     console.log(payload);
   }
@@ -84,9 +100,12 @@ export default function PhotoNewDialog({ trigger }: PhotoNewDialogProps) {
                   albums.map((album) => (
                     <Button
                       key={album.id}
-                      variant="ghost"
+                      variant={
+                        albumsIds?.includes(album.id) ? "primary" : "ghost"
+                      }
                       size="sm"
                       className="truncate"
+                      onClick={() => handleToggleAlbum(album.id)}
                     >
                       {album.title}
                     </Button>
