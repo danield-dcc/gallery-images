@@ -4,10 +4,12 @@ import { api } from "../../../helpers/api"
 import type { Album } from "../models/album"
 import { useQueryClient } from "@tanstack/react-query"
 import usePhotos from "../../photos/hooks/use-photos"
+import usePhotoAlbums from "../../photos/hooks/use-photos-albums"
 
 export default function useAlbum() {
   const queryClient = useQueryClient()
   const { photos } = usePhotos()
+  const { mangePhotoOnAlbum } = usePhotoAlbums()
 
   async function createAlbum(payload: AlbumNewFormSchema) {
     try {
@@ -22,9 +24,8 @@ export default function useAlbum() {
               .find((photo) => photo.id === photoId)
               ?.albums?.map((album) => album.id) || []
 
-            return api.put(`/photos/${photoId}/albums`, {
-              albumsIds: [...photoAlbumsIds, album.id]
-            })
+            return mangePhotoOnAlbum(photoId, [...photoAlbumsIds, album.id])
+
           }))
       }
 
